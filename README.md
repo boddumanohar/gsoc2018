@@ -2,9 +2,9 @@
 
 ### Project Introduction:
 
-Bareflank is the first hypervisor written in C++. Being written in C++, we can use inheritance to extend the features of the bareflank. That base hypervisor just provides APIs to interact with and to build custom extensions with it. 
+Bareflank is the first hypervisor written in C++. Being written in C++, we can use inheritance to extend the features of the Bareflank. That base hypervisor just provides APIs to interact with and to build custom extensions with it. 
 
-LibVMI is an introspection library, which currently supports, Xen and KVM. The goal of this project is create extensions that can be used to do introspection on the Bareflank VM.
+LibVMI is an introspection library, which currently supports, Xen and KVM. The goal of this project is to create extensions that can be used to do introspection on the Bareflank VM.
 
 #### Tasks acheived
 1. Get register information(complete)
@@ -27,9 +27,11 @@ Libvmi sends a malloced buffer to Bareflank to write the register data into this
 ##### Steps:
 * LibVMI sends the malloced buffer
 * Bareflank creates a new mapping for the physical address associated with the malloced buffer
-* So now, we have 2 mapping for the same physical address range, when something is on either of the mapping, the same information can read on both buffers. 
+* So now, we have 2 mapping for the same physical address range, when something is on either of the mappings, the same information can read on both buffers. 
 
 Here we write the register data on the Bareflank’s Mapping so that after vmcall, LibVMI’s buffer can read the same data.
+
+![asdf](res/register.png)
 
 Similarly to set the register data, we write to LibVMI’s buffer and Bareflank’s map can read it. 	 
 
@@ -39,7 +41,7 @@ When EPT is enabled, there are two sets of pages tables that convert a physical 
 
 We will use EPT to map a physical address(which could belong to other VM or the host VM itself) into LibVMI userspace process. The best way to do that, is to allocate a buffer. That will create a guest virtual to guest physical mapping in the CR3 that is associated with LibVMI userspace process. We then use EPT, and change the guest physical memory address that points to the RAM we just allocated, to instead point to the page we want to map in. 
 
-
+![asdf](res/ept.png)
 ### What’s left off:
 
 Currently, on the test examples, both the memory mapping techniques work. But I am still seeing kalsr offsets failed. 
@@ -54,18 +56,14 @@ Currently, on the test examples, both the memory mapping techniques work. But I 
 
 ### Good Times, Hard times:
 
-Knowledge on Virtual Machine Introspection is not easily found on the internet.Working on this project, and geting my doubts solved from my mentor Tamas K Lengyel, I was able to understand most of the terminology associated with VMI. 
+Knowledge of Virtual Machine Introspection is not easily found on the internet. Working on this project, and getting my doubts solved from my mentor Tamas K Lengyel, I was able to understand most of the terminology associated with VMI. 
 
-Bareflank hypervisor is a best reference hypervisor I can recommend for someone who wants to learn how a Hypervisor works. The structure of intel SDE manuals and the Bareflank code are coherent with each other.
+Bareflank hypervisor is the best reference hypervisor I can recommend for someone who wants to learn how a Hypervisor works. The structure of Intel SDE manuals and the Bareflank code are coherent with each other.
 
-When I was working on the EPT-based memory mapping hypercall, the logic that I wrote had made perfect sense, but still it the behaviour is not as expected. I struggled finding the reason for it, in vain reported to Ryan and he was able to find that MTRR logic that EPT relies on for doing an identity map, has a problem in it. 
+When I was working on the EPT-based memory mapping hypercall, the logic that I wrote had made perfect sense, but still it the behaviour is not as expected. I struggled to find reason for it, in vain reported to Ryan and he was able to find that MTRR logic that EPT relies on for doing an identity map, has a problem in it. 
 
 # Future work:
 
-I will complete try to use the updated EPT logic and get memory mapping hyerpcall work. 
+I will try to complete memory mapping hypercall using the updated EPT logic 
 With the NMI bug fixed, I will start working on events. 
-
-
-# Current code and test Codes: 
-
 
