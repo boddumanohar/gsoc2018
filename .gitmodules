@@ -2,3 +2,7 @@
 	path = libvmi_extensions
 	url = https://github.com/boddumanohar/libvmi_extensions.git
 	branch = master
+[submodule "libvmi"]
+	path = libvmi
+	url = https://github.com/boddumanohar/libvmi.git
+	branch = gsoc2018
