@@ -1,0 +1,4 @@
+[submodule "libvmi_extensions"]
+	path = libvmi_extensions
+	url = https://github.com/boddumanohar/libvmi_extensions.git
+	branch = master
